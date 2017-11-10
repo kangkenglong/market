@@ -22,7 +22,7 @@
 			<p style="font-size: 0.35rem;color:#051b28;line-height:0.45rem;">{{name}}</p>
 			<div style="display: flex;margin-top:0.2rem;">
 				<p style="font-size: 0.25rem;color:#828282;flex:1;">月销 {{sellNum}} 件</p>
-				<p style="font-size: 0.25rem;color:#828282;flex:1;">规格 {{specification}} </p>
+				<p style="font-size: 0.25rem;color:#828282;flex:1;">规格: {{specifications}} </p>
 			</div>
 		</div>
 		<p style="font-size: 0.3rem;color:#ccc;text-align:center;height:0.8rem;line-height:0.8rem;">──────── 商品描述──────── </p>
@@ -53,25 +53,31 @@
 				name: "",
 				sellNum: "",
 				goodDesc: "",
-				specification: "" // 规格
+				specifications: "" // 规格
 			}
 		},
 		mounted: function(){
-			console.error(this.$route.query.goodId);
+			window.scrollTo(0, 0);
 			this.loadMsg();
+			Util.removeScrollListener();
+			console.error("我在内容页");
 		},
 		methods: {
 			goback: function(){
-				window.history.go(-1);
+				// window.history.go(-1);
+				this.$router.go(-1);
+				// console.error(this.$router);
+				// this.$router.push("/");
 			},
 			// 请求商品信息
 			loadMsg: function(){
+				bus.$emit("loading", true);
 				request({
 					url: globalURL.gURL+globalURL.url.selgoods,
 					data: {goodsid: this.$route.query.goodId},
 					type: "POST"
 				}).then((data)=>{
-					console.error(1);
+					bus.$emit("loading", false);
 					console.error(data);
 					this.price=data.obj.price;
 					this.mprice=data.obj.marketprice;
@@ -80,9 +86,10 @@
 					this.sellNum=data.obj.salecount;
 					this.goodDesc=data.obj.content;
 					this.img=data.obj.img;
-					this.specification=data.obj.specification;
+					this.specifications=data.obj.specifications;
 				}, ()=>{
-					console.error(2);
+					bus.$emit("loading", false);
+					console.error("出错啦");
 				})
 			},
 			// 显示二级弹窗
@@ -140,5 +147,10 @@
 		padding: 0.3rem 0.3rem 0.5rem;
 		/* height: 8rem; */
 		background: #fff;
+	}
+</style>
+<style type="text/css">
+	.c_gDesc *{
+		width: 100%;
 	}
 </style>
