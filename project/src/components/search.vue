@@ -84,7 +84,7 @@ export default {
 				this.page=1;
 				request({
 					url: globalURL.gURL+globalURL.url.goodslist,
-					data: {page: this.page, rows: this.rows, name: this.message},
+					data: {page: 1, rows: this.rows*this.page, name: this.message},
 					type: "POST"
 				}).then((data)=>{
 					window.scrollTo(0, 0);

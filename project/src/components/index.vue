@@ -68,7 +68,7 @@ export default {
       bus.$emit("loading", true);
       request({
           url: globalURL.gURL+globalURL.url.goodslist,
-          data: {page: this.page, rows: this.rows},
+          data: {page: 1, rows: this.rows*this.page},
           type: "POST"
       }).then((data)=>{
           console.error("请求成功");
